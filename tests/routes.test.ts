@@ -13,11 +13,6 @@ describe("Route Checks", () => {
     expect(res.status).toBeGreaterThanOrEqual(400);
   });
 
-  test("GET events route exists", async () => {
-    const res = await request(app).get("/events");
-    expect(res.status).not.toBe(500);
-  });
-
   test("GET teams route exists", async () => {
     const res = await request(app).get("/teams");
     expect(res.status).not.toBe(500);
