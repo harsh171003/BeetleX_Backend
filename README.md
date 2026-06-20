@@ -2,6 +2,12 @@
 
 Backend implementation for the BeetleX Hackathon Management Platform.
 
+## Overview
+
+This project is a backend system for managing hackathons and technical events. It supports user authentication, event management, team formation, project submissions, announcements, judging, and leaderboard generation.
+
+---
+
 ## Tech Stack
 
 * Node.js
@@ -11,6 +17,8 @@ Backend implementation for the BeetleX Hackathon Management Platform.
 * Prisma ORM
 * Docker
 * JWT Authentication
+* Jest
+* Supertest
 
 ---
 
@@ -61,8 +69,38 @@ Backend implementation for the BeetleX Hackathon Management Platform.
 
 ### Leaderboard
 
-* Event Leaderboard
-* Ranking Based on Scores
+* Generate Event Leaderboard
+* Rank Projects Based on Scores
+
+---
+
+## Architecture
+
+The application follows a layered architecture to keep responsibilities separated and maintain the codebase easily.
+
+### Routes Layer
+
+Defines API endpoints and maps requests to controllers.
+
+### Controllers Layer
+
+Handles HTTP requests and responses.
+
+### Services Layer
+
+Contains business logic and database operations.
+
+### Middleware Layer
+
+Provides reusable functionality such as JWT authentication.
+
+### Database Layer
+
+Prisma ORM is used to communicate with PostgreSQL.
+
+### Infrastructure Layer
+
+Docker is used to containerize the application and database.
 
 ---
 
@@ -75,12 +113,23 @@ src
 ├── routes
 ├── middleware
 ├── lib
-└── generated
+├── generated
+└── server.ts
+
+tests
+├── app.test.ts
+├── health.test.ts
+├── routes.test.ts
+└── basic.test.ts
+
+prisma
+├── schema.prisma
+└── migrations
 ```
 
 ---
 
-## Installation
+## Setup Instructions
 
 ### Clone Repository
 
@@ -89,34 +138,51 @@ git clone <repository-url>
 cd BeetleX_Backend
 ```
 
-### Install Dependencies
-
-```bash
-npm install
-```
+---
 
 ### Environment Variables
 
 Create a `.env` file:
 
 ```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/beetlex
-JWT_SECRET=your_secret
+DATABASE_URL="postgresql://postgres:postgres@postgres:5432/beetlex"
+JWT_SECRET=your_secret_key
 ```
 
-### Start Database
+---
+
+## Running with Docker
+
+The entire application can be started using Docker.
 
 ```bash
-docker compose up -d
+docker-compose up --build
 ```
 
-### Run Migrations
+This command will:
+
+* Start PostgreSQL
+* Start the Backend API
+* Run Prisma migrations automatically
+* Expose the API on port 3000
+
+---
+
+## Running Locally
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run database migrations:
 
 ```bash
 npx prisma migrate dev
 ```
 
-### Start Server
+Start development server:
 
 ```bash
 npm run dev
@@ -124,9 +190,30 @@ npm run dev
 
 ---
 
+## Testing
+
+The project includes automated tests using Jest and Supertest.
+
+Run tests:
+
+```bash
+npm test
+```
+
+Current test coverage includes:
+
+* Application health checks
+* Route validation
+* API endpoint behavior
+* Basic functionality verification
+
+Total Tests: 16 Passing
+
+---
+
 ## API Modules
 
-* Auth
+* Authentication
 * Events
 * Registrations
 * Teams
@@ -137,11 +224,45 @@ npm run dev
 
 ---
 
+## Tradeoffs and Design Decisions
+
+### Simplicity vs Scalability
+
+The project prioritizes readability and maintainability while keeping the architecture scalable for future growth.
+
+### JWT Authentication
+
+JWT was chosen because it is stateless and easy to scale across multiple backend instances. A tradeoff is that token revocation is more difficult compared to session-based authentication.
+
+### Prisma ORM
+
+Prisma provides strong type safety and faster development speed. The tradeoff is slightly reduced control over highly optimized database queries.
+
+### Leaderboard Calculation
+
+Leaderboard rankings are calculated dynamically from project scores. This simplifies implementation but may require caching or pre-computation for very large events.
+
+### Dockerized Infrastructure
+
+Docker simplifies deployment and onboarding for developers by providing a consistent environment across systems.
+
+---
+
 ## Future Improvements
 
 * Redis Caching
-* Role Based Authorization
-* WebSocket Leaderboards
+* Role-Based Access Control (RBAC)
+* Real-Time Leaderboards using WebSockets
 * File Upload Support
 * Email Notifications
 * Pagination and Filtering
+* Audit Logging
+* Rate Limiting
+
+---
+
+## Author
+
+Harsh Dagar
+
+Backend Developer Assignment Submission for BeetleX.
