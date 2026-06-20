@@ -19,5 +19,19 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  backend:
+    build: .
+
+    container_name: beetlex-backend
+
+    depends_on:
+      - postgres
+
+    ports:
+      - "3000:3000"
+
+    env_file:
+      - .env
+
 volumes:
   postgres_data:
